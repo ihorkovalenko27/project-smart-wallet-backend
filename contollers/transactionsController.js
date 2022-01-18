@@ -6,7 +6,7 @@ const {
 } = require('../services/transactions');
 
 class TransactionController {
-  async addTransaction(req, res, next) {
+  async addTransactionCtrl(req, res, next) {
     const { _id: id } = req.user;
     const { type } = req.params;
     const result = await addTransaction({ ...req.body, type, owner: id });
@@ -14,7 +14,7 @@ class TransactionController {
     res.status(201).json(result);
   }
 
-  async deleteTransaction(req, res, next) {
+  async deleteTransactionCtrl(req, res, next) {
     const { id } = req.params;
     const result = await deleteTransaction(id);
 
@@ -27,7 +27,7 @@ class TransactionController {
     });
   }
 
-  async getMonthTransactions(req, res, next) {
+  async getMonthTransactionsCtrl(req, res, next) {
     const { _id: id } = req.user;
     const { year, month, type } = req.params;
     const result = await getMonthTransactions({ year, month, type, id });
@@ -35,7 +35,7 @@ class TransactionController {
     res.status(200).json(result);
   }
 
-  async getMonthCategoriesSum(req, res, next) {
+  async getMonthCategoriesSumCtrl(req, res, next) {
     const { _id: id } = req.user;
     const { year, month, type, propName, categoryType } = req.params;
     const result = await getMonthCategoriesSum({
