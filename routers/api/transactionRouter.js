@@ -1,33 +1,30 @@
 const express = require('express');
-const router = express.Router();
 
-const { TransactionController } = require('../../contollers');
+const {
+  getMonthCategoriesSumCtrl,
+  getMonthTransactionsCtrl,
+  addTransactionCtrl,
+  deleteTransactionCtrl,
+} = require('../../contollers/transactionsController');
 const { asyncWrapper } = require('../../helpers');
-
 const { authMiddleware } = require('../../middlewares');
+
+const router = express.Router();
 
 router.get(
   '/:year/:month/:type',
   authMiddleware,
-  asyncWrapper(TransactionController.getMonthTransactions),
+  asyncWrapper(getMonthTransactionsCtrl),
 );
 
 router.get(
   '/:year/:month/:type/:propName/:categoryType',
   authMiddleware,
-  asyncWrapper(TransactionController.getMonthCategoriesSum),
+  asyncWrapper(getMonthCategoriesSumCtrl),
 );
 
-router.post(
-  '/:type',
-  authMiddleware,
-  asyncWrapper(TransactionController.addTransaction),
-);
+router.post('/:type', authMiddleware, asyncWrapper(addTransactionCtrl));
 
-router.delete(
-  '/:id',
-  authMiddleware,
-  asyncWrapper(TransactionController.deleteTransaction),
-);
+router.delete('/:id', authMiddleware, asyncWrapper(deleteTransactionCtrl));
 
 module.exports = router;

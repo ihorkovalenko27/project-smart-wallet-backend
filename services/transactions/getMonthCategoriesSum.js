@@ -23,7 +23,7 @@ const getMonthCategoriesSum = async ({
   const result = {
     type,
     category: categoryType,
-    [propName]: sumTransactionsValue(allTransactions, propName),
+    list: sumTransactionsValue(allTransactions, propName),
   };
 
   return result;
