@@ -3,9 +3,12 @@ const axios = require('axios');
 const{User,userSchema} = require('../models');
 const {tokenService} = require('../helpers')
 const { BASE_URL, FRONTEND_URL,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET } = process.env;
+const {AppError} = require('../helpers');
+
 class AuthController {
-    async login(req, res, next) {
-     const stringifiedParams =queryString.stringify({
+    async login(req, res) {
+    try {
+       const stringifiedParams =queryString.stringify({
      client_id:GOOGLE_CLIENT_ID,
      redirect_uri:`${BASE_URL}/api/v1/auth/google-redirect`,
      scope:[
@@ -18,10 +21,14 @@ class AuthController {
      });
      return res.redirect(
          `https://accounts.google.com/o/oauth2/v2/auth?${stringifiedParams}`
-     )
+     )   
+     } catch (error) {
+        throw AppError.BadRequest(error.message) 
+     }
     };
   
-    async redirect(req, res, next) {
+    async redirect(req, res) {
+        try {
         const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
         const urlObj = new URL(fullUrl);
         const urlParams = queryString.parse(urlObj.search);
@@ -63,7 +70,11 @@ class AuthController {
           await tokenService.saveToken(user._id,tokenShort)
           res.redirect(
           `${FRONTEND_URL}?email=${email}&id=${user._id}&token=${tokenShort}`,
-        );
+        );  
+        } catch (error) {
+            throw AppError.BadRequest(error.message) 
+        }
+       
     };
   
   
