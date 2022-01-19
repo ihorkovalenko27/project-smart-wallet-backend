@@ -1,28 +1,30 @@
 
-const jwt = require('jsonwebtoken');
-const { User } = require('../../models');
+const { User, userSchema } = require('../../models');
 const { AppError } = require('../../helpers');
-require('dotenv').config();
+const {tokenService} = require('../../helpers');
+
 
 const userRegister = async ({ email, password }) => {
   const findUserByEmail = await User.findOne({ email });
   if (findUserByEmail) {
-    throw  AppError.RegisterConflictError()
+    throw  AppError.RegisterConflictError();
   }
- 
-  const user = await new User({ email, password});
-  await user.save();
 
-  const shortToken = jwt.sign({ _id: user._id }, process.env.ACCES_TOKEN_SECRET, { expiresIn: '1h' });
-  await User.findByIdAndUpdate(user._id,{ shortToken });
+  userSchema.path('password').required(true);
+  const user = await new User({ email});
+  user.setPassword(password);
+  await user.save();
+  const tokenShort = tokenService.generateToken({ _id: user._id });
+  await tokenService.saveToken(user._id,tokenShort);
+
 
   const newUser = {
-    shortToken,
+    tokenShort,
     email: user.email,
     balance:user.balance,
-  }
+  };
 
-  return newUser
+  return newUser;
 };
 
 module.exports = userRegister;
