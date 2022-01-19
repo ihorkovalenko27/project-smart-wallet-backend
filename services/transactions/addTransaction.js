@@ -5,21 +5,22 @@ const addTransaction = async body => {
   const { owner: userId, type, sum: transactionValue } = body;
 
   const user = await User.findById(userId);
+
   const newUserBalance =
     type === 'income'
       ? user.balance + transactionValue
       : user.balance - transactionValue;
 
-  checkUserBalance(newUserBalance);
+  if (checkUserBalance(newUserBalance)) {
+    await User.findByIdAndUpdate(
+      userId,
+      { balance: newUserBalance },
+      { new: true },
+    );
 
-  await User.findByIdAndUpdate(
-    userId,
-    { balance: newUserBalance },
-    { new: true },
-  );
+    const result = await Transaction.create(body);
 
-  const result = await Transaction.create(body);
-  return result;
+    return result;
+  }
 };
-
 module.exports = addTransaction;

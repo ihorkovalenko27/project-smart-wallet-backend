@@ -6,27 +6,33 @@ const {
 } = require('../services/transactions');
 
 class TransactionController {
-  async addTransactionCtrl(req, res, next) {
+  async addTransaction(req, res, next) {
     const { _id: id } = req.user;
     const { type } = req.params;
     const result = await addTransaction({ ...req.body, type, owner: id });
 
-    res.status(201).json(result);
-  }
-
-  async deleteTransactionCtrl(req, res, next) {
-    const { id } = req.params;
-    const result = await deleteTransaction(id);
-
     res.json({
       status: 'success',
-      message: 'contact deleted',
       data: {
         result,
       },
     });
   }
 
+  async deleteTransaction(req, res, next) {
+    const { id } = req.params;
+    const { _id: ownerId } = req.user;
+
+    const result = await deleteTransaction({ id, ownerId });
+
+    res.json({
+      status: 'success',
+      message: 'Transaction deleted',
+      data: {
+        result,
+      },
+    });
+  }
   async getMonthTransactionsCtrl(req, res, next) {
     const { _id: id } = req.user;
     const { year, month, type } = req.params;
