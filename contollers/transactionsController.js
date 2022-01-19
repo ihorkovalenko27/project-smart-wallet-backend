@@ -6,7 +6,7 @@ const {
 } = require('../services/transactions');
 
 class TransactionController {
-  async addTransaction(req, res, next) {
+  async addTransactionCtrl(req, res, next) {
     const { _id: id } = req.user;
     const { type } = req.params;
     const result = await addTransaction({ ...req.body, type, owner: id });
@@ -19,7 +19,7 @@ class TransactionController {
     });
   }
 
-  async deleteTransaction(req, res, next) {
+  async deleteTransactionCtrl(req, res, next) {
     const { id } = req.params;
     const { _id: ownerId } = req.user;
 
