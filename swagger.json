@@ -70,7 +70,7 @@
     "schemas": {
       "RegistrationRequest": {
         "type": "object",
-        "required": ["email", "password"],
+        "required": ["email"],
         "properties": {
           "email": {
             "type": "string",
@@ -79,7 +79,7 @@
           },
           "password": {
             "type": "string",
-            "description": "User's password",
+            "description": "User's password. Min length 6 characters.",
             "example": "qwerty123"
           }
         }

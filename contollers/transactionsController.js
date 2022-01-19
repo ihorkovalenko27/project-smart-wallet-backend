@@ -11,7 +11,7 @@ class TransactionController {
     const { type } = req.params;
     const result = await addTransaction({ ...req.body, type, owner: id });
 
-    res.json({
+    res.status(201).json({
       status: 'success',
       data: {
         result,
@@ -25,7 +25,7 @@ class TransactionController {
 
     const result = await deleteTransaction({ id, ownerId });
 
-    res.json({
+    res.status(201).json({
       status: 'success',
       message: 'Transaction deleted',
       data: {
@@ -38,7 +38,10 @@ class TransactionController {
     const { year, month, type } = req.params;
     const result = await getMonthTransactions({ year, month, type, id });
 
-    res.status(200).json(result);
+    res.status(200).json({
+      status: 'success',
+      data: result,
+    });
   }
 
   async getMonthCategoriesSumCtrl(req, res, next) {
@@ -53,7 +56,10 @@ class TransactionController {
       id,
     });
 
-    res.status(200).json(result);
+    res.status(200).json({
+      status: 'success',
+      data: result,
+    });
   }
 }
 
