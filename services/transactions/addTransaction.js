@@ -12,9 +12,9 @@ const addTransaction = async body => {
       ? user.balance + transactionValue
       : user.balance - transactionValue;
 
-
-  checkUserBalance(newUserBalance);
-  updateBalance({ id: userId, balance: newUserBalance });
+  if (checkUserBalance(newUserBalance)) {
+    updateBalance({ id: userId, balance: newUserBalance });
+    const result = await Transaction.create(body);
 
     return result;
   }
