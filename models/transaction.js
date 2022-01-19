@@ -4,10 +4,6 @@ const { Schema, model, SchemaTypes } = require('mongoose');
 
 const transactionSchema = Schema(
   {
-    date: {
-      type: Date,
-      // required: true,
-    },
     type: {
       type: String,
       enum: ['income', 'costs'],

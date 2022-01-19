@@ -13,21 +13,26 @@ class TransactionController {
 
     res.status(201).json({
       status: 'success',
-      data: result,
+      data: {
+        result,
+      },
     });
   }
 
   async deleteTransactionCtrl(req, res, next) {
     const { id } = req.params;
-    const result = await deleteTransaction(id);
+    const { _id: ownerId } = req.user;
+
+    const result = await deleteTransaction({ id, ownerId });
 
     res.status(201).json({
       status: 'success',
-      message: 'contact deleted',
-      data: result,
+      message: 'Transaction deleted',
+      data: {
+        result,
+      },
     });
   }
-
   async getMonthTransactionsCtrl(req, res, next) {
     const { _id: id } = req.user;
     const { year, month, type } = req.params;
