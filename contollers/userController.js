@@ -3,6 +3,7 @@ const {
   userLogin,
   userLogout,
   updateBalance,
+  getCurrentUser,
 } = require('../services/users');
 
 class UserController {
@@ -35,6 +36,14 @@ class UserController {
       data: {
         result,
       },
+    });
+  }
+
+  async getCurrentUserCtrl(req, res) {
+    const result = await getCurrentUser(req.user);
+    res.status(200).json({
+      status: 'success',
+      data: result,
     });
   }
 }
