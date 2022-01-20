@@ -40,25 +40,27 @@ class TransactionController {
 
     res.status(200).json({
       status: 'success',
-      data: result,
+      data: {
+        result,
+      },
     });
   }
 
   async getMonthCategoriesSumCtrl(req, res, next) {
     const { _id: id } = req.user;
-    const { year, month, type, propName, categoryType } = req.params;
+    const { year, month, type } = req.params;
     const result = await getMonthCategoriesSum({
       year,
       month,
       type,
-      propName,
-      categoryType,
       id,
     });
 
     res.status(200).json({
       status: 'success',
-      data: result,
+      data: {
+        result,
+      },
     });
   }
 }

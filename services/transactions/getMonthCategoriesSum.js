@@ -1,31 +1,19 @@
-const { sumTransactionsValue } = require('../../helpers');
+const { transactionsData } = require('../../helpers');
 const { NotFoundError } = require('../../helpers/errors');
 const { Transaction } = require('../../models');
 
-const getMonthCategoriesSum = async ({
-  year,
-  month,
-  type,
-  propName,
-  categoryType,
-  id,
-}) => {
-  const searchData =
-    categoryType === 'all'
-      ? { year, month, type, owner: id }
-      : { year, month, type, owner: id, category: categoryType };
-
-  const allTransactions = await Transaction.find(searchData);
+const getMonthCategoriesSum = async ({ year, month, type, id }) => {
+  const allTransactions = await Transaction.find({
+    year,
+    month,
+    type,
+    owner: id,
+  });
   if (!allTransactions[0]) {
     throw NotFoundError();
   }
 
-  const result = {
-    type,
-    category: categoryType,
-    list: sumTransactionsValue(allTransactions, propName),
-  };
-
+  const result = transactionsData(allTransactions);
   return result;
 };
 

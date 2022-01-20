@@ -3,6 +3,8 @@ const { asyncWrapper, errorHandler } = require('./apiHelpers');
 const checkUserBalance = require('./checkUserBalance');
 const sumTransactionsValue = require('./sumTransactionsValue');
 const tokenService = require('./tokenHelpers');
+const transactionsData = require('./transactionsData');
+
 
 module.exports = {
   AppError,
@@ -11,4 +13,5 @@ module.exports = {
   checkUserBalance,
   sumTransactionsValue,
   tokenService,
+  transactionsData,
 };
