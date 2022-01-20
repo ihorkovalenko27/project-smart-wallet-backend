@@ -7,25 +7,46 @@ const {
 } = require('../services/users');
 
 class UserController {
-  async register(req, res, next) {
+  async register(req, res) {
     const { email, password } = req.body;
-    const user = await userRegister({ email, password });
-    res.status(201).json({ user: user });
+    const {tokenShort,user} = await userRegister({ email, password });
+    res.status(201).json({
+      status: 'success',
+      data: {
+        headers:{tokenShort},
+        user,
+      },
+    });
   }
 
-  async logIn(req, res, next) {
+  async logIn(req, res) {
     const { email, password } = req.body;
-    const user = await userLogin({ email, password });
-    res.status(200).json({ user: user });
+    const {tokenShort,user} = await userLogin({ email, password });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        headers:{tokenShort},
+        user:{
+          id:user._id,
+          email:user.email,
+          balance:user.balance,
+        },
+      },
+    });
   }
 
-  async logOut(req, res, next) {
+  async logOut(req, res) {
     const { _id, tokenShort } = req.user;
     await userLogout({ _id, tokenShort });
-    res.status(200).json({ message: 'logout successful' });
+    res.status(200).json({
+      status: 'success',
+      data: {
+        message: 'You are logged out',
+      },
+    });
   }
 
-  async updateBalance(req, res, next) {
+  async updateBalance(req, res) {
     const { _id: id } = req.user;
     const { balance } = req.body;
 
