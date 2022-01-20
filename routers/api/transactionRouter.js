@@ -18,7 +18,7 @@ router.get(
 );
 
 router.get(
-  '/:year/:month/:type/:propName/:categoryType',
+  '/:year/:month/:type/data',
   authMiddleware,
   asyncWrapper(getMonthCategoriesSumCtrl),
 );
