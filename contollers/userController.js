@@ -9,11 +9,11 @@ const {
 class UserController {
   async register(req, res) {
     const { email, password } = req.body;
-    const {tokenShort,user} = await userRegister({ email, password });
+    const { tokenShort, user } = await userRegister({ email, password });
     res.status(201).json({
       status: 'success',
       data: {
-        headers:{tokenShort},
+        headers: { tokenShort },
         user,
       },
     });
@@ -21,15 +21,15 @@ class UserController {
 
   async logIn(req, res) {
     const { email, password } = req.body;
-    const {tokenShort,user} = await userLogin({ email, password });
+    const { tokenShort, user } = await userLogin({ email, password });
     res.status(200).json({
       status: 'success',
       data: {
-        headers:{tokenShort},
-        user:{
-          id:user._id,
-          email:user.email,
-          balance:user.balance,
+        headers: { tokenShort },
+        user: {
+          id: user._id,
+          email: user.email,
+          balance: user.balance,
         },
       },
     });
@@ -54,9 +54,7 @@ class UserController {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        result,
-      },
+      data: result,
     });
   }
 
@@ -64,9 +62,7 @@ class UserController {
     const result = await getCurrentUser(req.user);
     res.status(200).json({
       status: 'success',
-      data: {
-        result,
-      },
+      data: result,
     });
   }
 }
