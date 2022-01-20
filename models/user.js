@@ -1,10 +1,12 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
+const Joi = require('joi');
 
 const userSchema = Schema(
   {
     name: {
       type: String,
+      minlength: 3,
     },
     email: {
       type: String,
@@ -13,7 +15,7 @@ const userSchema = Schema(
     },
     password: {
       type: String,
-      required: [true, 'Email is required'],
+      required: [true, 'Password is required must be [a-zA-Z0-9]{3,30}'],
       minlength: 6,
     },
 
@@ -46,7 +48,16 @@ userSchema.methods.comparePassword = function (password) {
 
 const User = model('user', userSchema);
 
+const joiUserSchema = Joi.object({
+  email: Joi.string().email({
+    minDomainSegments: 2,
+    tlds: { allow: ['com', 'net', 'ua', 'ru'] },
+  }),
+  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+});
+
 module.exports = {
   User,
   userSchema,
+  joiUserSchema,
 };
