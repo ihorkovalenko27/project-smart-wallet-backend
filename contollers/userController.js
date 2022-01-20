@@ -14,7 +14,11 @@ class UserController {
       status: 'success',
       data: {
         headers: { tokenShort },
-        user,
+        user: {
+          id: user._id,
+          email: user.email,
+          balance: user.balance,
+        },
       },
     });
   }
