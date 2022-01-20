@@ -1,5 +1,4 @@
 const { transactionsData } = require('../../helpers');
-const { NotFoundError } = require('../../helpers/errors');
 const { Transaction } = require('../../models');
 
 const getMonthCategoriesSum = async ({ year, month, type, id }) => {
@@ -9,8 +8,9 @@ const getMonthCategoriesSum = async ({ year, month, type, id }) => {
     type,
     owner: id,
   });
-  if (!allTransactions[0]) {
-    throw NotFoundError();
+
+  if (!transactions[0]) {
+    return [];
   }
 
   const result = transactionsData(allTransactions);
