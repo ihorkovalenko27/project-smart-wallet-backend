@@ -8,7 +8,6 @@ const { userRouter, transactionRouter,googleRouter } = require('./routers/api');
 const { errorHandler } = require('./helpers');
 
 const app = express();
-app.use(express.static('public'))
 
 // swagger
 const swaggerUi = require('swagger-ui-express');
