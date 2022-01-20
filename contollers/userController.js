@@ -43,7 +43,9 @@ class UserController {
     const result = await getCurrentUser(req.user);
     res.status(200).json({
       status: 'success',
-      data: result,
+      data: {
+        result,
+      },
     });
   }
 }
