@@ -12,13 +12,10 @@ const userLogin = async ({ email, password }) => {
   };
   const tokenShort = tokenService.generateToken({ _id: user._id });
   await tokenService.saveToken(user._id,tokenShort);
-  const newUser = {
+  return {
     tokenShort,
-    email: user.email,
-    balance:user.balance,
-  }
-
-  return newUser;
+    user
+  };
 };
 
 module.exports = userLogin;
