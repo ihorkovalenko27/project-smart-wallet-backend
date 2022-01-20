@@ -40,7 +40,9 @@ class TransactionController {
 
     res.status(200).json({
       status: 'success',
-      data: result,
+      data: {
+        result,
+      },
     });
   }
 
@@ -56,7 +58,9 @@ class TransactionController {
 
     res.status(200).json({
       status: 'success',
-      data: result,
+      data: {
+        result,
+      },
     });
   }
 }
