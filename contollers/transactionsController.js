@@ -13,9 +13,7 @@ class TransactionController {
 
     res.status(201).json({
       status: 'success',
-      data: {
-        result,
-      },
+      data: result,
     });
   }
 
@@ -28,11 +26,10 @@ class TransactionController {
     res.status(201).json({
       status: 'success',
       message: 'Transaction deleted',
-      data: {
-        result,
-      },
+      data: result,
     });
   }
+
   async getMonthTransactionsCtrl(req, res, next) {
     const { _id: id } = req.user;
     const { year, month, type } = req.params;
@@ -40,9 +37,7 @@ class TransactionController {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        result,
-      },
+      data: result,
     });
   }
 
@@ -58,9 +53,7 @@ class TransactionController {
 
     res.status(200).json({
       status: 'success',
-      data: {
-        result,
-      },
+      data: result,
     });
   }
 }
