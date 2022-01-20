@@ -1,4 +1,3 @@
-const { NotFoundError } = require('../../helpers/errors');
 const { Transaction } = require('../../models');
 
 const getMonthTransactions = async ({ year, month, type, id }) => {
@@ -11,7 +10,7 @@ const getMonthTransactions = async ({ year, month, type, id }) => {
   let total = 0;
 
   if (!transactions[0]) {
-    throw NotFoundError();
+    return [];
   }
 
   if (transactions.length === 1) {
