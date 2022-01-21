@@ -18,15 +18,6 @@ const userSchema = Schema(
       required: [true, 'Password is required must be [a-zA-Z0-9]{3,30}'],
       minlength: 6,
     },
-
-    tokenLong: {
-      type: String,
-      default: null,
-    },
-    tokenShort: {
-      type: String,
-      default: null,
-    },
     avatarURL: {
       type: String,
     },
