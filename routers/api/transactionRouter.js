@@ -7,7 +7,8 @@ const {
   deleteTransactionCtrl,
 } = require('../../contollers/transactionsController');
 const { asyncWrapper } = require('../../helpers');
-const { authMiddleware } = require('../../middlewares');
+const { authMiddleware, ValidationMiddlewares } = require('../../middlewares');
+const { joiTransactionSchema } = require('../../models/transaction');
 
 const router = express.Router();
 
@@ -23,7 +24,12 @@ router.get(
   asyncWrapper(getMonthCategoriesSumCtrl),
 );
 
-router.post('/:type', authMiddleware, asyncWrapper(addTransactionCtrl));
+router.post(
+  '/:type',
+  authMiddleware,
+  ValidationMiddlewares(joiTransactionSchema),
+  asyncWrapper(addTransactionCtrl),
+);
 
 router.delete('/:id', authMiddleware, asyncWrapper(deleteTransactionCtrl));
 
