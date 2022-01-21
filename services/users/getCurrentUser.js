@@ -1,5 +1,5 @@
-const getCurrentUser = ({ _id, balance, tokenShort, tokenLong }) => {
-  const userData = { id: _id, balance, tokenShort, tokenLong };
+const getCurrentUser = ({ _id, balance, email, tokenShort, tokenLong }) => {
+  const userData = { id: _id, email, balance, tokenShort, tokenLong };
   return userData;
 };
 
