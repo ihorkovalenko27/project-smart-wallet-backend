@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { AppError } = require('../helpers');
 const { User } = require('../models');
-
+const {Session} = require('../models');
 
 const authMiddleware = async (req, res, next) => {
   try {
@@ -14,29 +14,33 @@ const authMiddleware = async (req, res, next) => {
         ),
       );
     }
- const [tokenType, tokenShort] = authorization.split(' ');
+ const [tokenType, acces_token] = authorization.split(' ');
 
     if (tokenType !== 'Bearer') {
       next(AppError.NotAuthorizedError('Invalid token'));
     }
 
-    if (!tokenShort) {
+    if (!acces_token) {
       next(AppError.NotAuthorizedError('Please, provide a token'));
     }
 
-    const verify = jwt.verify(tokenShort, process.env.ACCES_TOKEN_SECRET);
+    const verify = jwt.verify(acces_token, process.env.ACCES_TOKEN_SECRET);
   
     if (!verify) {
       next(AppError.NotAuthorizedError('Invalid token'));
     }
 
-    const user = await User.findOne({ _id: verify._id })
-    if (!user || !user.tokenShort) {
-      next(AppError.NotAuthorizedError('User not authorized'));
+    const user = await User.findById((verify).uid);
+    const session = await Session.findById((verify).sid);
+    if (!user ) {
+      next(AppError.NotAuthorizedError('Invalid user'));
+    }
+    if (!session) {
+      next(AppError.NotAuthorizedError('Invalid session'));
     }
 
-    req.token = tokenShort;
     req.user = user;
+    req.session = session;
     next();
   } catch (error) {
     next(AppError.NotAuthorizedError('User not authorized'))
