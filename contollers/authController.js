@@ -52,7 +52,7 @@ class AuthController {
             Authorization: `Bearer ${tokenData.data.access_token}`,
           },
         });
-      
+
         const { data:{email} } = userData;
         const user = await User.findOne({ email });
       
@@ -60,16 +60,19 @@ class AuthController {
           userSchema.path('password').required(false)
           const newUser = new User({ email });
           await newUser.save();
-          const tokenShort = tokenService.generateToken({ _id: newUser._id });
-          await tokenService.saveToken(newUser._id,tokenShort);
+          const newSession = await Session.create({uid: user._id,});
+          const {acces_token} = tokenService.generateToken({ uid: newUser._id,sid: newSession._id  });
+          const {refresh_token} = tokenService.generateToken({ uid: newUser._id, sid: newSession._id  });
+          const sid=newSession._id;
           return res.redirect(
-            `${FRONTEND_URL}?email=${email}&id=${newUser._id}&token=${tokenShort}`,
+            `${FRONTEND_URL}?acces_token=${acces_token}&refresh_token=${refresh_token}&sid=${sid}&id=${newUser._id}`,
           );
         }
-          const tokenShort = tokenService.generateToken({ _id: user._id });
-          await tokenService.saveToken(user._id,tokenShort)
+        const newSession = await Session.create({uid: user._id,});
+        const {acces_token} = tokenService.generateToken({ uid: user._id,sid: newSession._id  });
+        const {refresh_token} = tokenService.generateToken({ uid: user._id, sid: newSession._id  });
           res.redirect(
-          `${FRONTEND_URL}?email=${email}&id=${user._id}&token=${tokenShort}`,
+          `${FRONTEND_URL}?acces_token=${acces_token}&refresh_token=${refresh_token}&sid=${sid}&id=${user._id}`,
         );  
         } catch (error) {
             throw AppError.BadRequest(error.message) 

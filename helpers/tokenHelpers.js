@@ -1,15 +1,14 @@
 const jwt = require('jsonwebtoken');
-const {User} = require('../models');
 
 class TokenService{
     generateToken(payload){
-    const tokenShort = jwt.sign(payload,process.env.ACCES_TOKEN_SECRET,{expiresIn:'1h'});
-    return tokenShort;
+    const acces_token = jwt.sign(payload,process.env.ACCES_TOKEN_SECRET,{expiresIn:process.env.JWT_ACCESS_EXPIRE_TIME});
+    const refresh_token = jwt.sign(payload,process.env.REFRESH_TOKEN_SECRET,{expiresIn:process.env.JWT_REFRESH_EXPIRE_TIME});
+    return {
+        acces_token,
+        refresh_token,
+    }
     };
-
-    async saveToken(userId,tokenShort){
-    await User.findByIdAndUpdate(userId, { tokenShort },{new:true});
-     };
 
 };
 

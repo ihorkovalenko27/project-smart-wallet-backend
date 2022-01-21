@@ -4,16 +4,20 @@ const {
   userLogout,
   updateBalance,
   getCurrentUser,
+  getNewTokens
 } = require('../services/users');
 
 class UserController {
   async register(req, res) {
     const { email, password } = req.body;
-    const { tokenShort, user } = await userRegister({ email, password });
+    const {acces_token,refresh_token,sid,user} = await userRegister({ email, password });
     res.status(201).json({
       status: 'success',
       data: {
-        headers: { tokenShort },
+        headers: {
+          acces_token,
+          refresh_token,
+          sid, },
         user: {
           id: user._id,
           email: user.email,
@@ -25,11 +29,15 @@ class UserController {
 
   async logIn(req, res) {
     const { email, password } = req.body;
-    const { tokenShort, user } = await userLogin({ email, password });
+    const { acces_token,refresh_token,sid,user } = await userLogin({ email, password });
     res.status(200).json({
       status: 'success',
       data: {
-        headers: { tokenShort },
+        headers: { 
+          acces_token ,
+          refresh_token,
+          sid,
+         },
         user: {
           id: user._id,
           email: user.email,
@@ -40,8 +48,12 @@ class UserController {
   }
 
   async logOut(req, res) {
-    const { _id, tokenShort } = req.user;
-    await userLogout({ _id, tokenShort });
+    const currentSession = req.session;
+    await userLogout({ currentSession });
+    req.user = null;
+    req.session = null;
+    console.log(req.session)
+    console.log(req.user)
     res.status(200).json({
       status: 'success',
       data: {
@@ -69,6 +81,17 @@ class UserController {
       data: result,
     });
   }
+  async refreshTokens(req,res){
+    const { authorization } = req.headers;  
+    const session =req.body.sid;
+    const {new_acces_token,new_refresh_token,newSid} = await getNewTokens({authorization,session})
+    res.status(200).json({
+      status: 'success',
+      data: {
+        new_acces_token,new_refresh_token,newSid
+      },
+    });
+    }
 }
 
 module.exports = new UserController();

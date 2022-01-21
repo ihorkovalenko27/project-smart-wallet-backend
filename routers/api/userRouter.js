@@ -23,5 +23,7 @@ router.patch(
   asyncWrapper(UserController.updateBalance),
 );
 router.get('/current', authMiddleware, asyncWrapper(getCurrentUserCtrl));
+router.post('/refresh', asyncWrapper(UserController.refreshTokens));
+
 
 module.exports = router;

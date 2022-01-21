@@ -1,5 +1,6 @@
 const { Transaction, joiTransactionSchema } = require('./transaction');
 const { User, userSchema, joiUserSchema } = require('./user');
+const Session = require('./session');
 
 module.exports = {
   Transaction,
@@ -7,4 +8,5 @@ module.exports = {
   joiUserSchema,
   User,
   userSchema,
+  Session
 };

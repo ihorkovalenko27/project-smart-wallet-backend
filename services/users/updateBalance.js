@@ -6,8 +6,8 @@ const updateBalance = async ({ id, balance }) => {
     id: user._id,
     email: user.email,
     balance: user.balance,
-    tokenShort: user.tokenShort,
-    tokenLong: user.tokenLong,
+    acces_token: user.acces_token,
+    refresh_token: user.refresh_token,
   };
   return result;
 };
