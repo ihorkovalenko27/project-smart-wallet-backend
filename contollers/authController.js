@@ -1,6 +1,6 @@
 const queryString = require('query-string');
 const axios = require('axios');
-const{User,userSchema} = require('../models');
+const{User,userSchema,Session} = require('../models');
 const {tokenService} = require('../helpers')
 const { BASE_URL, FRONTEND_URL,GOOGLE_CLIENT_ID,GOOGLE_CLIENT_SECRET } = process.env;
 const {AppError} = require('../helpers');
