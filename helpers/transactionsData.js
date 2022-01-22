@@ -1,3 +1,5 @@
+/* eslint-disable guard-for-in */
+/* eslint-disable no-restricted-syntax */
 const transactionsData = arr => {
   const result = [];
 
@@ -37,6 +39,7 @@ const transactionsData = arr => {
 
     const sumOfCategories = filterTransactionsByCategories.reduce(
       (acc, trans) => {
+        // eslint-disable-next-line no-param-reassign
         acc += trans.sum;
         return acc;
       },
