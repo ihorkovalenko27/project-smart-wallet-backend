@@ -52,8 +52,6 @@ class UserController {
     await userLogout({ currentSession });
     req.user = null;
     req.session = null;
-    console.log(req.session)
-    console.log(req.user)
     res.status(200).json({
       status: 'success',
       data: {
