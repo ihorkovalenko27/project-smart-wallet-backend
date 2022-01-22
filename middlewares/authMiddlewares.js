@@ -14,7 +14,7 @@ const authMiddleware = async (req, res, next) => {
         ),
       );
     }
-    const [tokenType, acces_token] = authorization.split(' ');
+    const [tokenType, acces_token] = authorization.split(' '); //destructure token from authorization header
 
     if (tokenType !== 'Bearer') {
       next(AppError.NotAuthorizedError('Invalid token'));
@@ -24,13 +24,13 @@ const authMiddleware = async (req, res, next) => {
       next(AppError.NotAuthorizedError('Please, provide a token'));
     }
 
-    const verify = jwt.verify(acces_token, process.env.ACCES_TOKEN_SECRET);
+    const verify = jwt.verify(acces_token, process.env.ACCES_TOKEN_SECRET); //cheking current tokens
 
     if (!verify) {
       next(AppError.NotAuthorizedError('Invalid token'));
     }
 
-    const user = await User.findById(verify.uid);
+    const user = await User.findById(verify.uid);      //search user and session in database
     const session = await Session.findById(verify.sid);
     if (!user) {
       next(AppError.NotAuthorizedError('Invalid user'));
@@ -43,7 +43,7 @@ const authMiddleware = async (req, res, next) => {
     req.session = session;
     next();
   } catch (error) {
-    next(AppError.NotAuthorizedError('User not authorized'));
+    next(AppError.NotAuthorizedError(error.message));
   }
 };
 
