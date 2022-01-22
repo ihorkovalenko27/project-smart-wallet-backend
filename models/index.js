@@ -8,5 +8,5 @@ module.exports = {
   joiUserSchema,
   User,
   userSchema,
-  Session
+  Session,
 };

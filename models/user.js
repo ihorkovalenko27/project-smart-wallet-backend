@@ -29,6 +29,7 @@ const userSchema = Schema(
   { versionKey: false, timestamps: true },
 );
 
+// eslint-disable-next-line func-names
 userSchema.methods.setPassword = function (password) {
   this.password = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
 };
@@ -44,6 +45,7 @@ const joiUserSchema = Joi.object({
     minDomainSegments: 2,
     tlds: { allow: ['com', 'net', 'ua', 'ru'] },
   }),
+  // eslint-disable-next-line prefer-regex-literals
   password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
 });
 

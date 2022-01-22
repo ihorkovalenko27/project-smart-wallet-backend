@@ -1,4 +1,4 @@
-const { NotFoundError, checkUserBalance } = require('../../helpers');
+const { checkUserBalance } = require('../../helpers');
 const { Transaction, User } = require('../../models');
 const { updateBalance } = require('../users');
 

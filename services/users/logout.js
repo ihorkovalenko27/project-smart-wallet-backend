@@ -1,6 +1,6 @@
-const{Session} = require('../../models')
+const { Session } = require('../../models');
 
-const userLogout = async ({currentSession}) => {
+const userLogout = async ({ currentSession }) => {
   await Session.deleteOne({ _id: currentSession._id });
 };
 

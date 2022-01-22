@@ -1,10 +1,11 @@
 const transactionsData = arr => {
   const result = [];
 
+  // eslint-disable-next-line no-shadow
   const sumOfTransactionDescription = arr => {
-    const allDescriptions = arr.reduce((result, transactions) => {
+    const allDescriptions = arr.reduce((acc, transactions) => {
       result.push({ [transactions.description]: transactions.sum });
-      return result;
+      return acc;
     }, []);
 
     const descriptionsSum = allDescriptions.reduce((result, current) => {
@@ -30,9 +31,9 @@ const transactionsData = arr => {
   );
 
   getUniqueCategories.forEach(element => {
-    const filterTransactionsByCategories = arr.filter(tr => {
-      return tr.category === element;
-    });
+    const filterTransactionsByCategories = arr.filter(
+      tr => tr.category === element,
+    );
 
     const sumOfCategories = filterTransactionsByCategories.reduce(
       (result, trans) => {

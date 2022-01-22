@@ -11,5 +11,5 @@ module.exports = {
   userLogout,
   updateBalance,
   getCurrentUser,
-  getNewTokens
+  getNewTokens,
 };

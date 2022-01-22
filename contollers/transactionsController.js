@@ -6,9 +6,10 @@ const {
 } = require('../services/transactions');
 
 class TransactionController {
-  async addTransactionCtrl(req, res, next) {
+  async addTransactionCtrl(req, res) {
     const { _id: id } = req.user;
     const { type } = req.params;
+    // eslint-disable-next-line node/no-unsupported-features/es-syntax
     const result = await addTransaction({ ...req.body, type, owner: id });
 
     res.status(201).json({
@@ -17,7 +18,7 @@ class TransactionController {
     });
   }
 
-  async deleteTransactionCtrl(req, res, next) {
+  async deleteTransactionCtrl(req, res) {
     const { id } = req.params;
     const { _id: userId } = req.user;
 
@@ -26,13 +27,11 @@ class TransactionController {
     res.status(201).json({
       status: 'success',
       message: 'Transaction deleted',
-      data: {
-        result,
-      },
+      data: result,
     });
   }
 
-  async getMonthTransactionsCtrl(req, res, next) {
+  async getMonthTransactionsCtrl(req, res) {
     const { _id: id } = req.user;
     const { year, month, type } = req.params;
     const result = await getMonthTransactions({ year, month, type, id });
@@ -43,7 +42,7 @@ class TransactionController {
     });
   }
 
-  async getMonthCategoriesSumCtrl(req, res, next) {
+  async getMonthCategoriesSumCtrl(req, res) {
     const { _id: id } = req.user;
     const { year, month, type } = req.params;
     const result = await getMonthCategoriesSum({

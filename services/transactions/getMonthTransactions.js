@@ -11,12 +11,12 @@ const getMonthTransactions = async ({ year, month, type, id }) => {
     return [];
   }
 
-  const transactionsWithFullDate = arr => {
-    return arr.map(el => {
+  const transactionsWithFullDate = arr =>
+    arr.map(el => {
       const fullDate = { date: [el.day, el.month, el.year].join('.') };
+      // eslint-disable-next-line node/no-unsupported-features/es-syntax
       return { ...el._doc, ...fullDate };
     });
-  };
 
   let total = 0;
   if (transactions.length === 1) {

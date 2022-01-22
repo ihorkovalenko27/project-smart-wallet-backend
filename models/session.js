@@ -1,9 +1,10 @@
 const { Schema, model } = require('mongoose');
 
-const sessionSchema = new Schema({
+const sessionSchema = new Schema(
+  {
     uid: Schema.Types.ObjectId,
-},
-{ versionKey: false, timestamps: true },
+  },
+  { versionKey: false, timestamps: true },
 );
 
 const Session = model('session', sessionSchema);

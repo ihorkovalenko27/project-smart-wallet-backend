@@ -1,13 +1,11 @@
-const express = require('express')
-const router = express.Router()
-const { asyncWrapper } = require('../../helpers')
-const {AuthController} = require('../../contollers')
+const express = require('express');
 
+const router = express.Router();
+const { asyncWrapper } = require('../../helpers');
+const { AuthController } = require('../../contollers');
 
+router.get('/google', asyncWrapper(AuthController.login));
 
-router.get('/google', asyncWrapper(AuthController.login))
+router.get('/google-redirect', asyncWrapper(AuthController.redirect));
 
-router.get('/google-redirect',  asyncWrapper(AuthController.redirect))
-
-
-module.exports = router
+module.exports = router;
