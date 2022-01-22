@@ -4,22 +4,22 @@ const transactionsData = arr => {
   // eslint-disable-next-line no-shadow
   const sumOfTransactionDescription = arr => {
     const allDescriptions = arr.reduce((acc, transactions) => {
-      result.push({ [transactions.description]: transactions.sum });
+      acc.push({ [transactions.description]: transactions.sum });
       return acc;
     }, []);
 
-    const descriptionsSum = allDescriptions.reduce((result, current) => {
+    const descriptionsSum = allDescriptions.reduce((acc, current) => {
       for (let key in current) {
         let value = current[key];
 
-        if (result[key] === undefined) {
-          result[key] = value;
+        if (acc[key] === undefined) {
+          acc[key] = value;
         } else {
-          result[key] += value;
+          acc[key] += value;
         }
       }
 
-      return result;
+      return acc;
     }, {});
 
     return descriptionsSum;
@@ -36,9 +36,9 @@ const transactionsData = arr => {
     );
 
     const sumOfCategories = filterTransactionsByCategories.reduce(
-      (result, trans) => {
-        result += trans.sum;
-        return result;
+      (acc, trans) => {
+        acc += trans.sum;
+        return acc;
       },
       0,
     );
