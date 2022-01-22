@@ -9,7 +9,7 @@ const getMonthCategoriesSum = async ({ year, month, type, id }) => {
     owner: id,
   });
 
-  if (!transactions[0]) {
+  if (transactions[0]) {
     return [];
   }
 
