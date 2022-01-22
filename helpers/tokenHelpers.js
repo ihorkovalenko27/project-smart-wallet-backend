@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-
+ //custom class for generate tokens
 class TokenService {
   generateToken(payload) {
     const acces_token = jwt.sign(payload, process.env.ACCES_TOKEN_SECRET, {
