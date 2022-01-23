@@ -47,6 +47,8 @@ const transactionSchema = Schema(
 const Transaction = model('transaction', transactionSchema);
 
 const joiTransactionSchema = Joi.object({
+  category:Joi.string(),
+  description: Joi.string(),
   sum: Joi.number().integer().positive().required(),
   day: Joi.string().min(2).max(2).required(),
   month: Joi.string().min(2).max(2).required(),
