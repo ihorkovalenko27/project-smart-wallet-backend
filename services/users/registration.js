@@ -1,3 +1,4 @@
+const gravatar = require('gravatar');
 const { User, userSchema } = require('../../models');
 const { Session } = require('../../models');
 const { AppError } = require('../../helpers');
@@ -10,7 +11,7 @@ const userRegister = async ({ email, password }) => {
   }
 
   userSchema.path('password').required(true);
-  const user = await new User({ email });
+  const user = await new User({ email ,avatarURL: gravatar.url(email)});
   user.setPassword(password);
   await user.save();
   const newSession = await Session.create({
