@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.3",
+  "openapi": "3.0.0",
   "info": {
     "version": "1.0.1",
     "title": "Smart Finance",
@@ -11,11 +11,15 @@
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "http://localhost:5050/api/v1" }],
+  "servers": [{ "url": "https://project-smart-finance.herokuapp.com/api/v1" }],
   "tags": [
     {
       "name": "Auth",
       "description": "Authorization endpoints"
+    },
+    {
+      "name": "Users",
+      "description": "User information endpoints"
     },
     {
       "name": "Transactions",
@@ -28,10 +32,39 @@
       "post": {
         "tags": ["Auth"],
         "summary": "User registration",
-
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email in use",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
         "requestBody": {
           "description": "Registration's object",
           "required": true,
@@ -55,63 +88,916 @@
             }
           },
           "400": {
+            "description": "Email: ' ' not found. Password is wrong",
+            "content": {}
+          },
+
+          "409": {
+            "description": "Email in use",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Refresh token",
+        "security": [{ "BearerRefresh": [] }],
+        "requestBody": {
+          "description": "Refresh token object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "description": "Logout object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/{balance}": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Change user balance",
+        "parameters": [
+          {
+            "name": "balance",
+            "in": "path",
+            "required": true,
+            "type": "number",
+            "description": "New user balance"
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeBalanceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          },
+          "400": {
+            "description": "As a result of this operation the balance will be negative.",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/users/current": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get current user",
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChangeBalanceResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/transactions/{year}/{month}/{type}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get all user transactions by month and type",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Transactoions year"
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Transactoions month"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Transactoions type: costs/income/all"
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTransactionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/transactions/{year}/{month}/{type}/data": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get all user transactions DATA by month and type",
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Transactoions year"
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Transactoions month"
+          },
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Transactoions type: costs/income/all"
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTransactionsDataResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/transactions/{type}": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Add new transactions",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Transactoions type: costs/income"
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "description": "Transaction object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTransactionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddTransactionsResponse"
+                }
+              }
+            }
+          },
+          "400": {
             "description": "Bad request (invalid request body)",
             "content": {}
           },
-          "409": {
-            "description": "Provided email already exists",
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/transactions/{id}": {
+      "delete": {
+        "tags": ["Transactions"],
+        "summary": "Delete transaction",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "New user balance"
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteTransactionResponce"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          },
+          "400": {
+            "description": "As a result of this operation the balance will be negative.",
             "content": {}
           }
         }
       }
     }
   },
+
   "components": {
     "schemas": {
       "RegistrationRequest": {
         "type": "object",
-        "required": ["email"],
+        "required": ["email", "password"],
         "properties": {
           "email": {
             "type": "string",
             "description": "User's email",
-            "format": "email"
+            "format": "email",
+            "example": "masterYoda@gmail.com"
           },
           "password": {
             "type": "string",
             "description": "User's password. Min length 6 characters.",
-            "example": "qwerty123"
+            "example": "force1977"
+          }
+        }
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "required": ["sid"],
+        "properties": {
+          "sid": {
+            "type": "string",
+            "description": "Security ID",
+            "example": "61ed52f8f81f92f0ee8aaf63"
+          }
+        }
+      },
+      "AddTransactionRequest": {
+        "type": "object",
+        "required": ["day", "category", "description", "month", "year", "sum"],
+        "properties": {
+          "day": {
+            "type": "string",
+            "description": "Transaction day",
+            "example": "09"
+          },
+          "category": {
+            "type": "string",
+            "description": "Transaction category",
+            "example": "Транспорт"
+          },
+          "description": {
+            "type": "string",
+            "description": "Transaction description",
+            "example": "велocипед"
+          },
+          "month": {
+            "type": "string",
+            "description": "Transaction month",
+            "example": "12"
+          },
+          "year": {
+            "type": "string",
+            "description": "Transaction year",
+            "example": "2021"
+          },
+          "sum": {
+            "type": "number",
+            "description": "Transaction sum",
+            "example": 300
           }
         }
       },
       "RegistrationResponse": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            },
-            "userId": {
-              "type": "number",
-              "description": "User's id",
-              "example": "32143232436545474"
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "description": "Autorization data",
+            "properties": {
+              "headers": {
+                "type": "object",
+                "properties": {
+                  "acces_token": {
+                    "type": "string",
+                    "description": "Autorization token",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWVkNTJmN2Y4MWY5MmYwZWU4YWFmNjEiLCJzaWQiOiI2MWVkNTJmOGY4MWY5MmYwZWU4YWFmNjMiLCJpYXQiOjE2NDI5NDMyMjQsImV4cCI6MTY0Mjk0NjgyNH0.DqA_rfTYvXO022Y-k2ErGvoIFxc2BDhxl_StrlyD_qg"
+                  },
+                  "refresh_token": {
+                    "type": "string",
+                    "description": "Autorization token",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWVkNTJmN2Y4MWY5MmYwZWU4YWFmNjEiLCJzaWQiOiI2MWVkNTJmOGY4MWY5MmYwZWU4YWFmNjMiLCJpYXQiOjE2NDI5NDMyMjQsImV4cCI6MTY0NTUzNTIyNH0.-7C3bKRmE_I_1aS0Tk2lldGBPtr3XgUYIk5LYPnHKvA"
+                  },
+                  "sid": {
+                    "type": "string",
+                    "description": "Security ID",
+                    "example": "61ed52f8f81f92f0ee8aaf63"
+                  }
+                }
+              },
+              "user": {
+                "type": "object",
+                "description": "Created user",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "User ID",
+                    "example": "61ed5be7f81f92f0ee8ab105"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email",
+                    "example": "masterYoda@gmail.com"
+                  },
+                  "balance": {
+                    "type": "number",
+                    "description": "User balance",
+                    "example": "10500"
+                  }
+                }
+              }
             }
           }
         },
-        "example": [
-          { "email": "1@gmail.com", "userId": "1" },
-          { "email": "2@gmail.com", "userId": "2" }
-        ]
+        "example": {
+          "status": "success",
+          "data": {
+            "headers": {
+              "acces_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWU4NzU0ZjM2ODk1YmZlNGFlZjI4ZmMiLCJzaWQiOiI2MWVkNjI3M2Y4MWY5MmYwZWU4YWIyMGQiLCJpYXQiOjE2NDI5NDcxODcsImV4cCI6MTY0Mjk1MDc4N30.FFo3L-rgdMFVgSIvlfIxmXfp493unN_Yc7515DTQQdw",
+              "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWU4NzU0ZjM2ODk1YmZlNGFlZjI4ZmMiLCJzaWQiOiI2MWVkNjI3M2Y4MWY5MmYwZWU4YWIyMGQiLCJpYXQiOjE2NDI5NDcxODcsImV4cCI6MTY0NTUzOTE4N30.7Rj_rQl6dSQdRwuQ-gH0jdN7Hb1yMXBwtE9YN7mxkBI",
+              "sid": "61ed6273f81f92f0ee8ab20d"
+            },
+            "user": {
+              "id": "61e8754f36895bfe4aef28fc",
+              "email": "elenrosee@gmail.com",
+              "balance": 20461
+            }
+          }
+        }
+      },
+      "ChangeBalanceResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "description": "User with new balance",
+            "properties": {
+              "user": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "User ID",
+                    "example": "61ed5be7f81f92f0ee8ab105"
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "User's email",
+                    "format": "email",
+                    "example": "masterYoda@gmail.com"
+                  },
+                  "balance": {
+                    "type": "number",
+                    "description": "New user balance",
+                    "example": "10500"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "data": {
+            "id": "61e8754f36895bfe4aef28fc",
+            "email": "elenrosee@gmail.com",
+            "balance": 20000
+          }
+        }
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "headers": {
+                "type": "object",
+                "properties": {
+                  "new_acces_token": {
+                    "type": "string",
+                    "description": "Autorization token",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWVkNTJmN2Y4MWY5MmYwZWU4YWFmNjEiLCJzaWQiOiI2MWVkNTJmOGY4MWY5MmYwZWU4YWFmNjMiLCJpYXQiOjE2NDI5NDMyMjQsImV4cCI6MTY0Mjk0NjgyNH0.DqA_rfTYvXO022Y-k2ErGvoIFxc2BDhxl_StrlyD_qg"
+                  },
+                  "new_refresh_token": {
+                    "type": "string",
+                    "description": "Autorization token",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWVkNTJmN2Y4MWY5MmYwZWU4YWFmNjEiLCJzaWQiOiI2MWVkNTJmOGY4MWY5MmYwZWU4YWFmNjMiLCJpYXQiOjE2NDI5NDMyMjQsImV4cCI6MTY0NTUzNTIyNH0.-7C3bKRmE_I_1aS0Tk2lldGBPtr3XgUYIk5LYPnHKvA"
+                  },
+                  "newSid": {
+                    "type": "string",
+                    "description": "Security ID",
+                    "example": "61ed52f8f81f92f0ee8aaf63"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "data": {
+            "new_acces_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWU4NzU0ZjM2ODk1YmZlNGFlZjI4ZmMiLCJzaWQiOiI2MWVkNjU1NWY4MWY5MmYwZWU4YWIyOTYiLCJpYXQiOjE2NDI5NDc5MjUsImV4cCI6MTY0Mjk1MTUyNX0.W8a230skBB4diooDbvyYk8ylOprokpYu5sB8SgTrgvw",
+            "new_refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWU4NzU0ZjM2ODk1YmZlNGFlZjI4ZmMiLCJzaWQiOiI2MWVkNjU1NWY4MWY5MmYwZWU4YWIyOTYiLCJpYXQiOjE2NDI5NDc5MjUsImV4cCI6MTY0NTUzOTkyNX0.5C9E3sf8DiWFDga6qCUGcs7JzFK2gmMPnVrjMpXsibk",
+            "newSid": "61ed6555f81f92f0ee8ab296"
+          }
+        }
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "description": "Operation result",
+                "example": "You are logged out"
+              }
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "data": {
+            "message": "You are logged out"
+          }
+        }
+      },
+      "GetTransactionsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "description": "All transactions from this period and type",
+            "properties": {
+              "transactions": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "description": "Tranasaction ID",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWVkNTJmN2Y4MWY5MmYwZWU4YWFmNjEiLCJzaWQiOiI2MWVkNTJmOGY4MWY5MmYwZWU4YWFmNjMiLCJpYXQiOjE2NDI5NDMyMjQsImV4cCI6MTY0Mjk0NjgyNH0.DqA_rfTYvXO022Y-k2ErGvoIFxc2BDhxl_StrlyD_qg"
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "Transaction type",
+                    "example": "income"
+                  },
+                  "category": {
+                    "type": "string",
+                    "description": "Transaction category",
+                    "example": "Транспорт"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Transaction description",
+                    "example": "велocипед"
+                  },
+                  "sum": {
+                    "type": "number",
+                    "description": "Transaction sum",
+                    "example": 300
+                  },
+                  "day": {
+                    "type": "string",
+                    "description": "Transaction day",
+                    "example": "09"
+                  },
+                  "month": {
+                    "type": "string",
+                    "description": "Transaction month",
+                    "example": "12"
+                  },
+                  "year": {
+                    "type": "string",
+                    "description": "Transaction year",
+                    "example": "2021"
+                  },
+                  "owner": {
+                    "type": "string",
+                    "description": "Transaction owner ID",
+                    "example": "61e8754f36895bfe4aef28fc"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "description": "Transaction createdAt",
+                    "example": "2022-01-19T20:40:52.048Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "description": "Transaction updatedAt",
+                    "example": "2022-01-19T20:40:52.048Z"
+                  },
+                  "data": {
+                    "type": "string",
+                    "description": "Full date of transaction",
+                    "example": "09.12.2021"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "data": {
+            "transactions": [
+              {
+                "_id": "61e878e438630fdee30eaf62",
+                "type": "costs",
+                "category": "спорт,хобби",
+                "description": "gym",
+                "sum": 350,
+                "day": "09",
+                "month": "12",
+                "year": "2021",
+                "owner": "61e8754f36895bfe4aef28fc",
+                "createdAt": "2022-01-19T20:47:32.639Z",
+                "updatedAt": "2022-01-19T20:47:32.639Z",
+                "date": "09.12.2021"
+              }
+            ]
+          }
+        }
+      },
+      "GetTransactionsDataResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "description": "All transactions DATA from this period and type",
+            "properties": {
+              "category": {
+                "type": "string",
+                "description": "Transaction category",
+                "example": "Транспорт"
+              },
+              "sum": {
+                "type": "number",
+                "description": "Transaction sum",
+                "example": 300
+              },
+              "description": {
+                "type": "object",
+                "properties": {
+                  "descriptionName": {
+                    "type": "number",
+                    "example": 200
+                  }
+                }
+              }
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "data": [
+            {
+              "category": "коммуналка, связь",
+              "sum": 44012,
+              "description": {
+                "water": 1012,
+                "велocипед": 43000
+              }
+            }
+          ]
+        }
+      },
+      "AddTransactionsResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "description": "New transaction",
+            "properties": {
+              "type": {
+                "type": "string",
+                "description": "Transaction type",
+                "example": "income"
+              },
+              "category": {
+                "type": "string",
+                "description": "Transaction category",
+                "example": "Транспорт"
+              },
+              "description": {
+                "type": "string",
+                "description": "Transaction description",
+                "example": "велocипед"
+              },
+              "sum": {
+                "type": "number",
+                "description": "Transaction sum",
+                "example": 300
+              },
+              "day": {
+                "type": "string",
+                "description": "Transaction day",
+                "example": "09"
+              },
+              "month": {
+                "type": "string",
+                "description": "Transaction month",
+                "example": "12"
+              },
+              "year": {
+                "type": "string",
+                "description": "Transaction year",
+                "example": "2021"
+              },
+              "owner": {
+                "type": "string",
+                "description": "Transaction owner ID",
+                "example": "61e8754f36895bfe4aef28fc"
+              },
+              "_id": {
+                "type": "string",
+                "description": "Tranasaction ID",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWVkNTJmN2Y4MWY5MmYwZWU4YWFmNjEiLCJzaWQiOiI2MWVkNTJmOGY4MWY5MmYwZWU4YWFmNjMiLCJpYXQiOjE2NDI5NDMyMjQsImV4cCI6MTY0Mjk0NjgyNH0.DqA_rfTYvXO022Y-k2ErGvoIFxc2BDhxl_StrlyD_qg"
+              },
+              "createdAt": {
+                "type": "string",
+                "description": "Transaction createdAt",
+                "example": "2022-01-19T20:40:52.048Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "description": "Transaction updatedAt",
+                "example": "2022-01-19T20:40:52.048Z"
+              }
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "data": {
+            "type": "costs",
+            "category": "Транспорт",
+            "description": "велocипед",
+            "sum": 300,
+            "day": "09",
+            "month": "12",
+            "year": "2021",
+            "owner": "61e8754f36895bfe4aef28fc",
+            "_id": "61eda649ab5a7ae50383e867",
+            "createdAt": "2022-01-23T19:02:33.778Z",
+            "updatedAt": "2022-01-23T19:02:33.778Z"
+          }
+        }
+      },
+      "DeleteTransactionResponce": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "message": {
+            "type": "string",
+            "example": "Transaction deleted"
+          },
+          "data": {
+            "type": "object",
+            "description": "New transaction",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "Tranasaction ID",
+                "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiI2MWVkNTJmN2Y4MWY5MmYwZWU4YWFmNjEiLCJzaWQiOiI2MWVkNTJmOGY4MWY5MmYwZWU4YWFmNjMiLCJpYXQiOjE2NDI5NDMyMjQsImV4cCI6MTY0Mjk0NjgyNH0.DqA_rfTYvXO022Y-k2ErGvoIFxc2BDhxl_StrlyD_qg"
+              },
+              "type": {
+                "type": "string",
+                "description": "Transaction type",
+                "example": "income"
+              },
+              "category": {
+                "type": "string",
+                "description": "Transaction category",
+                "example": "Транспорт"
+              },
+              "description": {
+                "type": "string",
+                "description": "Transaction description",
+                "example": "велocипед"
+              },
+              "sum": {
+                "type": "number",
+                "description": "Transaction sum",
+                "example": 300
+              },
+              "day": {
+                "type": "string",
+                "description": "Transaction day",
+                "example": "09"
+              },
+              "month": {
+                "type": "string",
+                "description": "Transaction month",
+                "example": "12"
+              },
+              "year": {
+                "type": "string",
+                "description": "Transaction year",
+                "example": "2021"
+              },
+              "owner": {
+                "type": "string",
+                "description": "Transaction owner ID",
+                "example": "61e8754f36895bfe4aef28fc"
+              },
+              "createdAt": {
+                "type": "string",
+                "description": "Transaction createdAt",
+                "example": "2022-01-19T20:40:52.048Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "description": "Transaction updatedAt",
+                "example": "2022-01-19T20:40:52.048Z"
+              }
+            }
+          }
+        },
+        "example": {
+          "status": "success",
+          "message": "Transaction deleted",
+          "data": {
+            "_id": "61ed190c2343061d0679a013",
+            "type": "costs",
+            "category": "коммуналка, связь",
+            "description": "велocипед",
+            "sum": 10000,
+            "day": "09",
+            "month": "12",
+            "year": "2021",
+            "owner": "61e8754f36895bfe4aef28fc",
+            "createdAt": "2022-01-23T08:59:56.585Z",
+            "updatedAt": "2022-01-23T08:59:56.585Z"
+          }
+        }
       }
     },
     "securitySchemes": {
-      "Bearer": {
+      "BearerAuth": {
         "type": "http",
         "scheme": "bearer",
-        "bearerFormat": "JWT"
+        "bearerFormat": "JWT",
+        "description": "acces_token"
+      },
+      "BearerRefresh": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "refresh_token"
       }
     }
   }
