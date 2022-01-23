@@ -69,7 +69,7 @@ class AuthController {
         userSchema.path('password').required(false);
         const newUser = new User({ email });
         await newUser.save();
-        const newSession = await Session.create({ uid: user._id }); // create new session
+        const newSession = await Session.create({ uid: newUser._id }); // create new session
         const { acces_token } = tokenService.generateToken({
           // generate tokens
           uid: newUser._id,
