@@ -11,12 +11,12 @@ const transactionSchema = Schema(
     category: {
       type: String,
       required: [true, 'category must be enter'],
-      minlength: 2,
+     
     },
     description: {
       type: String,
       required: [true, 'description must be enter'],
-      minlength: 2,
+     
     },
     sum: {
       type: Number,
@@ -47,8 +47,6 @@ const transactionSchema = Schema(
 const Transaction = model('transaction', transactionSchema);
 
 const joiTransactionSchema = Joi.object({
-  category: Joi.string().min(2).max(15).required(),
-  description: Joi.string().min(2).max(40).required(),
   sum: Joi.number().integer().positive().required(),
   day: Joi.string().min(2).max(2).required(),
   month: Joi.string().min(2).max(2).required(),
