@@ -21,8 +21,7 @@ const transactionSchema = Schema(
     sum: {
       type: Number,
       required: [true, 'sum must be enter'],
-      min: 0.01,
-    },
+     },
     day: {
       type: String,
       required: [true, 'day must be enter (2 characters)'],
