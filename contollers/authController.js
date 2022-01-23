@@ -1,4 +1,5 @@
 const queryString = require('query-string');
+const gravatar = require('gravatar');
 const axios = require('axios');
 const { User, userSchema, Session } = require('../models');
 const { tokenService } = require('../helpers');
@@ -67,7 +68,7 @@ class AuthController {
       if (!user) {
         // if doesnt exist - create new user
         userSchema.path('password').required(false);
-        const newUser = new User({ email });
+        const newUser = new User({ email, avatarURL: gravatar.url(email) });
         await newUser.save();
         const newSession = await Session.create({ uid: newUser._id }); // create new session
         const { acces_token } = tokenService.generateToken({
