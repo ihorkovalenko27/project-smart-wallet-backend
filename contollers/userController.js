@@ -26,6 +26,7 @@ class UserController {
           id: user._id,
           email: user.email,
           balance: user.balance,
+          avatarURL: user.avatarURL,
         },
       },
     });
