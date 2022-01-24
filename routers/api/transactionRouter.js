@@ -5,7 +5,7 @@ const {
   getMonthTransactionsCtrl,
   addTransactionCtrl,
   deleteTransactionCtrl,
-  getMonthTransactionsTotalAmountsCtrl,
+  getMonthTotalAmountsCtrl,
 } = require('../../contollers/transactionsController');
 
 const { asyncWrapper } = require('../../helpers');
@@ -27,9 +27,9 @@ router.get(
 );
 
 router.get(
-  '/:year/:month/:type/total',
+  '/:type/total',
   authMiddleware,
-  asyncWrapper(getMonthTransactionsTotalAmountsCtrl),
+  asyncWrapper(getMonthTotalAmountsCtrl),
 );
 
 router.post(
