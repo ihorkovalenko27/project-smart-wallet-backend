@@ -57,6 +57,24 @@ class TransactionController {
       data: result,
     });
   }
+
+  async getMonthTransactionsTotalAmountsCtrl(req, res) {
+    // const { _id: id } = req.user;
+    // const { year, month, type } = req.params;
+    const result = {
+      '01': 100,
+      '02': 200,
+      '03': 300,
+      '04': 400,
+      '05': 500,
+      '06': 600,
+    };
+
+    res.status(200).json({
+      status: 'success',
+      data: result,
+    });
+  }
 }
 
 module.exports = new TransactionController();
