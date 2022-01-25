@@ -5,6 +5,7 @@ const { updateBalance } = require('../users');
 const deleteTransaction = async ({ id, userId }) => {
   const user = await User.findById(userId);
   const userTransaction = await Transaction.findById(id);
+
   const userTransactionSum = userTransaction.sum;
   const userTransactionType = userTransaction.type;
   const newUserBalance =
