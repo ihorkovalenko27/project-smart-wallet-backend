@@ -1,7 +1,7 @@
 const { Transaction } = require('../../models');
 
 const getMonthTotalAmounts = async ({ type, id }) => {
-  const result = [];
+  const result = {};
 
   for (let i = 0; i < 6; i += 1) {
     const dateNow = new Date();
@@ -26,11 +26,7 @@ const getMonthTotalAmounts = async ({ type, id }) => {
       return acc;
     }, 0);
 
-    result.push({
-      year: `${new Date(lastMonth).getFullYear()}`,
-      month: dateNow.toLocaleString('ru', { month: 'long' }),
-      sum,
-    });
+    result[dateNow.toLocaleString('ru', { month: 'long' })] = sum;
   }
 
   return result;
