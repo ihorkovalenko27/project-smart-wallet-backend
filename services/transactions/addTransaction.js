@@ -1,5 +1,6 @@
 const { checkUserBalance } = require('../../helpers');
 const { Transaction, User } = require('../../models');
+const { updateBalance } = require('../users');
 
 const addTransaction = async body => {
   const { owner: userId, type, sum: transactionValue } = body;
@@ -12,9 +13,9 @@ const addTransaction = async body => {
       : user.balance - transactionValue;
 
   if (checkUserBalance(newUserBalance)) {
-    await User.findByIdAndUpdate(userId, { balance: newUserBalance });
-
+    updateBalance({ id: userId, balance: newUserBalance });
     const result = await Transaction.create(body);
+
     return result;
   }
 };

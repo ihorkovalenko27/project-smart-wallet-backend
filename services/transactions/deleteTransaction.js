@@ -1,9 +1,11 @@
 const { checkUserBalance } = require('../../helpers');
 const { Transaction, User } = require('../../models');
+const { updateBalance } = require('../users');
 
 const deleteTransaction = async ({ id, userId }) => {
   const user = await User.findById(userId);
   const userTransaction = await Transaction.findById(id);
+
   const userTransactionSum = userTransaction.sum;
   const userTransactionType = userTransaction.type;
   const newUserBalance =
@@ -12,8 +14,7 @@ const deleteTransaction = async ({ id, userId }) => {
       : user.balance + userTransactionSum;
 
   if (checkUserBalance(newUserBalance)) {
-    await User.findByIdAndUpdate(userId, { balance: newUserBalance });
-
+    updateBalance({ id: userId, balance: newUserBalance });
     const result = await Transaction.findByIdAndRemove(id);
     return result;
   }
