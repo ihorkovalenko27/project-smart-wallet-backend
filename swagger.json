@@ -66,7 +66,7 @@
         "tags": ["Auth"],
         "summary": "User login",
         "requestBody": {
-          "description": "Registration's object",
+          "description": "Login object",
           "required": true,
           "content": {
             "application/json": {
@@ -77,7 +77,7 @@
           }
         },
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -89,11 +89,6 @@
           },
           "400": {
             "description": "Email: ' ' not found. Password is wrong",
-            "content": {}
-          },
-
-          "409": {
-            "description": "Email in use",
             "content": {}
           }
         }
@@ -138,17 +133,6 @@
         "tags": ["Auth"],
         "summary": "User logout",
         "security": [{ "BearerAuth": [] }],
-        "requestBody": {
-          "description": "Logout object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefreshTokenRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -255,7 +239,7 @@
         ],
         "security": [{ "BearerAuth": [] }],
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -296,17 +280,49 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "Transactoions type: costs/income/all"
+            "description": "Transactoions type: costs/income"
           }
         ],
         "security": [{ "BearerAuth": [] }],
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GetTransactionsDataResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Please, provide a token in request authorization header",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/transactions/{type}/total": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Get all user transactions TOTAL sum by last 6 month and specified type",
+        "parameters": [
+          {
+            "name": "type",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Transactoions type: costs/income"
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTransactionsTotalResponse"
                 }
               }
             }
@@ -375,12 +391,12 @@
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "New user balance"
+            "description": "transaction ID"
           }
         ],
         "security": [{ "BearerAuth": [] }],
         "responses": {
-          "201": {
+          "200": {
             "description": "Successful operation",
             "content": {
               "application/json": {
@@ -419,17 +435,6 @@
             "type": "string",
             "description": "User's password. Min length 6 characters.",
             "example": "force1977"
-          }
-        }
-      },
-      "RefreshTokenRequest": {
-        "type": "object",
-        "required": ["sid"],
-        "properties": {
-          "sid": {
-            "type": "string",
-            "description": "Security ID",
-            "example": "61ed52f8f81f92f0ee8aaf63"
           }
         }
       },
@@ -804,6 +809,31 @@
               }
             }
           ]
+        }
+      },
+      "GetTransactionsTotalResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "Operation status",
+            "example": "success"
+          },
+          "data": {
+            "type": "object",
+            "description": "All transactions total sum from last 6 month and specified type"
+          }
+        },
+        "example": {
+          "status": "success",
+          "data": {
+            "январь": 4588,
+            "декабрь": 13440,
+            "ноябрь": 9670,
+            "октябрь": 9890,
+            "сентябрь": 12333,
+            "август": 15600
+          }
         }
       },
       "AddTransactionsResponse": {
