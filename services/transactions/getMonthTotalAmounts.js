@@ -28,7 +28,7 @@ const getMonthTotalAmounts = async ({ type, id }) => {
 
     result.push({
       year: `${new Date(lastMonth).getFullYear()}`,
-      month,
+      month: dateNow.toLocaleString('ru', { month: 'long' }),
       sum,
     });
   }
