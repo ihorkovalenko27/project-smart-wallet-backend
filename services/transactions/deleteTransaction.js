@@ -12,7 +12,7 @@ const deleteTransaction = async ({ id, userId }) => {
       : user.balance + userTransactionSum;
 
   if (checkUserBalance(newUserBalance)) {
-    await User.findByIdAndUpdate(id, { balance: newUserBalance });
+    await User.findByIdAndUpdate(userId, { balance: newUserBalance });
 
     const result = await Transaction.findByIdAndRemove(id);
     return result;
