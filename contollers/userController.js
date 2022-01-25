@@ -69,10 +69,9 @@ class UserController {
   }
 
   async updateBalance(req, res) {
-    const { _id: id } = req.user;
     const { balance } = req.params;
 
-    const result = await updateBalance({ id, balance });
+    const result = await updateBalance({ user: req.user, balance });
 
     res.status(200).json({
       status: 'success',
