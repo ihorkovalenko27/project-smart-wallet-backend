@@ -21,7 +21,10 @@ const updateBalance = async ({ user, balance }) => {
     year: `${dateNow.getFullYear()}`,
   };
 
-  await Transaction.create(newTransaction);
+  if (balance !== user.balance) {
+    await Transaction.create(newTransaction);
+  }
+
   const updatedUser = await User.findByIdAndUpdate(
     user._id,
     { balance },
