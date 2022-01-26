@@ -4,7 +4,6 @@ const userLogout = require('./logout');
 const updateBalance = require('./updateBalance');
 const getCurrentUser = require('./getCurrentUser');
 const getNewTokens = require('./getNewTokens');
-const addNewBalance = require('./addNewBalance');
 
 module.exports = {
   userRegister,
@@ -13,5 +12,4 @@ module.exports = {
   updateBalance,
   getCurrentUser,
   getNewTokens,
-  addNewBalance,
 };
