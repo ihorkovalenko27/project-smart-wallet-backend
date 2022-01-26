@@ -25,7 +25,7 @@ class TransactionController {
 
     const result = await deleteTransaction({ id, userId });
 
-    res.status(201).json({
+    res.status(200).json({
       status: 'success',
       message: 'Transaction deleted',
       data: result,
