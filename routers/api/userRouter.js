@@ -25,10 +25,16 @@ router.post(
 router.post('/logout', authMiddleware, asyncWrapper(UserController.logOut));
 
 // PATCH update users balance
+// router.patch(
+//   '/:balance',
+//   authMiddleware,
+//   asyncWrapper(UserController.updateBalance),
+// );
+
 router.patch(
   '/:balance',
   authMiddleware,
-  asyncWrapper(UserController.updateBalance),
+  asyncWrapper(UserController.addNewBalanceCtrl),
 );
 
 // GET current user
