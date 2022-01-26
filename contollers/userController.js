@@ -69,7 +69,7 @@ class UserController {
     });
   }
 
-  async addNewBalanceCtrl(req, res) {
+  async updateBalance(req, res) {
     const { _id: id } = req.user;
     const { balance } = req.params;
 
