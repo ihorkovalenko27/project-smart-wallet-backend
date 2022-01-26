@@ -1,33 +1,44 @@
 const express = require('express');
-const router = express.Router();
 
-const { TransactionController } = require('../../contollers');
+const {
+  getMonthCategoriesSumCtrl,
+  getMonthTransactionsCtrl,
+  addTransactionCtrl,
+  deleteTransactionCtrl,
+  getMonthTotalAmountsCtrl,
+} = require('../../contollers/transactionsController');
+
 const { asyncWrapper } = require('../../helpers');
+const { authMiddleware, ValidationMiddlewares } = require('../../middlewares');
+const { joiTransactionSchema } = require('../../models/transaction');
 
-const { authMiddleware } = require('../../middlewares');
+const router = express.Router();
 
 router.get(
   '/:year/:month/:type',
   authMiddleware,
-  asyncWrapper(TransactionController.getMonthTransactions),
+  asyncWrapper(getMonthTransactionsCtrl),
 );
 
 router.get(
-  '/:year/:month/:type/:propName/:categoryType',
+  '/:year/:month/:type/data',
   authMiddleware,
-  asyncWrapper(TransactionController.getMonthCategoriesSum),
+  asyncWrapper(getMonthCategoriesSumCtrl),
+);
+
+router.get(
+  '/:type/total',
+  authMiddleware,
+  asyncWrapper(getMonthTotalAmountsCtrl),
 );
 
 router.post(
   '/:type',
   authMiddleware,
-  asyncWrapper(TransactionController.addTransaction),
+  ValidationMiddlewares(joiTransactionSchema),
+  asyncWrapper(addTransactionCtrl),
 );
 
-router.delete(
-  '/:id',
-  authMiddleware,
-  asyncWrapper(TransactionController.deleteTransaction),
-);
+router.delete('/:id', authMiddleware, asyncWrapper(deleteTransactionCtrl));
 
 module.exports = router;

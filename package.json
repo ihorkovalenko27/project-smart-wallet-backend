@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "cross-env NODE_ENV=production node ./bin/server.js",
-    "dev": "cross-env NODE_ENV=development nodemon ./bin/server.js"
+    "dev": "cross-env NODE_ENV=development nodemon ./bin/server.js",
+    "lint": "eslint ./",
+    "lint:fix": "eslint ./ --fix"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +19,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^11.0.0",
     "express": "^4.17.2",
+    "gravatar": "^1.8.2",
     "http-errors": "^2.0.0",
     "joi": "^17.5.0",
     "jsonwebtoken": "^8.5.1",
@@ -26,6 +29,14 @@
     "swagger-ui-express": "^4.3.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "eslint": "^8.7.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-node": "^4.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1"
   }
 }

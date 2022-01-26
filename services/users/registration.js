@@ -1,28 +1,36 @@
-
-const jwt = require('jsonwebtoken');
-const { User } = require('../../models');
+const gravatar = require('gravatar');
+const { User, userSchema } = require('../../models');
+const { Session } = require('../../models');
 const { AppError } = require('../../helpers');
-require('dotenv').config();
+const { tokenService } = require('../../helpers');
 
 const userRegister = async ({ email, password }) => {
   const findUserByEmail = await User.findOne({ email });
   if (findUserByEmail) {
-    throw  AppError.RegisterConflictError()
+    throw AppError.RegisterConflictError();
   }
- 
-  const user = await new User({ email, password});
+
+  userSchema.path('password').required(true);
+  const user = await new User({ email ,avatarURL: gravatar.url(email)});
+  user.setPassword(password);
   await user.save();
-
-  const shortToken = jwt.sign({ _id: user._id }, process.env.ACCES_TOKEN_SECRET, { expiresIn: '1h' });
-  await User.findByIdAndUpdate(user._id,{ shortToken });
-
-  const newUser = {
-    shortToken,
-    email: user.email,
-    balance:user.balance,
-  }
-
-  return newUser
+  const newSession = await Session.create({
+    uid: user._id,
+  });
+  const { acces_token } = tokenService.generateToken({
+    uid: user._id,
+    sid: newSession._id,
+  });
+  const { refresh_token } = tokenService.generateToken({
+    uid: user._id,
+    sid: newSession._id,
+  });
+  return {
+    acces_token,
+    refresh_token,
+    sid: newSession._id,
+    user,
+  };
 };
 
 module.exports = userRegister;

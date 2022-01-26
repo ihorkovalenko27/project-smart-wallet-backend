@@ -1,25 +1,32 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const { User } = require('../../models');
 const { AppError } = require('../../helpers');
+const { Session } = require('../../models');
+const { tokenService } = require('../../helpers');
 
 const userLogin = async ({ email, password }) => {
   const user = await User.findOne({ email });
   if (!user) {
-    throw  AppError.BadRequest(`Email: '${email}' not found`);
+    throw AppError.BadRequest(`Email: '${email}' not found`);
   }
-  if (!await bcrypt.compare(password, user.password)) {
-    throw  AppError.BadRequest('Password is wrong');
+  if (!user.comparePassword(password)) {
+    throw AppError.BadRequest('Password is wrong');
   }
-
-  const tokenShort = jwt.sign({ _id: user._id }, process.env.ACCES_TOKEN_SECRET, { expiresIn: '1h' });
-  await User.findByIdAndUpdate(user._id, { tokenShort });
+  const newSession = await Session.create({
+    uid: user._id,
+  });
+  const { acces_token } = tokenService.generateToken({
+    uid: user._id,
+    sid: newSession._id,
+  });
+  const { refresh_token } = tokenService.generateToken({
+    uid: user._id,
+    sid: newSession._id,
+  });
   return {
-    tokenShort,
-    user: {
-      email: user.email,
-      balance: user.balance,
-    },
+    acces_token,
+    refresh_token,
+    sid: newSession._id,
+    user,
   };
 };
 

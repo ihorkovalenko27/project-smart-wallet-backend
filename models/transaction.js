@@ -1,13 +1,8 @@
-const { Schema, model, SchemaTypes } = require('mongoose');
-// const Joi = require('joi');
-// const { string } = require('joi');
+const { Schema, model } = require('mongoose');
+const Joi = require('joi');
 
 const transactionSchema = Schema(
   {
-    date: {
-      type: Date,
-      // required: true,
-    },
     type: {
       type: String,
       enum: ['income', 'costs'],
@@ -15,22 +10,30 @@ const transactionSchema = Schema(
     },
     category: {
       type: String,
-      required: true,
-      minlength: 2,
+      required: [true, 'category must be enter'],
+     
     },
     description: {
       type: String,
-      required: true,
-      minlength: 2,
+      required: [true, 'description must be enter'],
+     
     },
     sum: {
       type: Number,
-      required: [true, 'total must be enter'],
-      min: 0.01,
+      required: [true, 'sum must be enter'],
+     },
+    day: {
+      type: String,
+      required: [true, 'day must be enter (2 characters)'],
     },
-    day: { type: String },
-    month: { type: String },
-    year: { type: String },
+    month: {
+      type: String,
+      required: [true, 'month must be enter (2 characters)'],
+    },
+    year: {
+      type: String,
+      required: [true, 'year must be enter (4 characters)'],
+    },
     owner: {
       type: Schema.Types.ObjectId,
       ref: 'user',
@@ -42,4 +45,13 @@ const transactionSchema = Schema(
 
 const Transaction = model('transaction', transactionSchema);
 
-module.exports = Transaction;
+const joiTransactionSchema = Joi.object({
+  category:Joi.string().required(),
+  description: Joi.string().required(),
+  sum: Joi.number().integer().positive().required(),
+  day: Joi.string().min(2).max(2).required(),
+  month: Joi.string().min(2).max(2).required(),
+  year: Joi.string().min(4).max(4).required(),
+});
+
+module.exports = { Transaction, joiTransactionSchema };
