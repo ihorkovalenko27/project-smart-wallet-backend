@@ -1,10 +1,12 @@
+/* eslint-disable camelcase */
 const {
   userRegister,
   userLogin,
   userLogout,
-  updateBalance,
+  //  updateBalance,
   getCurrentUser,
   getNewTokens,
+  addNewBalance,
 } = require('../services/users');
 
 class UserController {
@@ -67,11 +69,12 @@ class UserController {
     });
   }
 
-  async updateBalance(req, res) {
-    const { _id: id } = req.user;
+  async addNewBalanceCtrl(req, res) {
+    //  const { _id: id } = req.user;
     const { balance } = req.params;
 
-    const result = await updateBalance({ id, balance });
+    const result = await addNewBalance({ user: req.user, balance });
+    // const result = await updateBalance({ id, balance });
 
     res.status(200).json({
       status: 'success',
