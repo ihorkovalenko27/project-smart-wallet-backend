@@ -47,7 +47,7 @@ const joiUserSchema = Joi.object({
     tlds: { allow: ['com', 'net', 'ua', 'ru'] },
   }),
   // eslint-disable-next-line prefer-regex-literals
-  password: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')),
+  password: Joi.string().pattern(/^\S(\w\S|\W\S)\S{3,30}\S$/),
 });
 
 module.exports = {
